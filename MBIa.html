@@ -88,23 +88,112 @@
 
             <div id="solid" class="border">
                 <div class="solid_title1">Działanie algorytmu</div>
-                <p>Poszczególne kroki</p>
-                <table table border="1" cellspacing="5">
-                    <tr>
-                    	 <th></th>	<th>M1</th>	<th>M2</th>
-                    </tr>
-                    <tr>
-                    	 <th>N1</th>	<td>...</td>	<td>...</td>
-                    </tr>
-                    <tr>
-                    	 <th>N2</th>	<td>...</td>	<td>...</td>
-                    </tr>
-                </table>
+                    <div id="steps">
+                    </div>
             </div>
         </div>
 
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="MBIjavascript.js" ></script>
+        <script src="pca-with-dependencies.js"></script>
 
+        <script>
+
+        $(document).ready(function(){
+
+            var nieznormalizowane_dane = null;
+
+            function getM(){
+              var wymiar_m = $("#wymiar_m").val();
+              console.log("Wybrana liczba m cech = " + wymiar_m);
+              return wymiar_m;
+            }
+            function getN(){
+              var wymiar_n = $("#wymiar_n").val();
+              console.log("Wybrana liczba n cech = " + wymiar_n);
+              return wymiar_n;
+            }
+
+            $("#getData").on("click", function(){
+
+                var dataMatrix = [];
+                var m = getM();
+                var n = getN();
+
+                console.log("Zainicjalizowano macierz przechowującą dane...");
+
+                var nieznormalizowane_dane = new Matrix(parseInt(n),  parseInt(m));
+
+                console.log("Rozpoczęto wczytywanie danych...");
+
+                var currentValue = 0;
+                var currentRow = 0;
+                var dataCurrentRow = [];
+
+                for( var i = 1; i <= n; i++){
+                    dataCurrentRow=[];
+                    currentRow = $('#input_data_table').find(".N" + i);
+                    for (var j = 1; j<= m; j++){
+                        currentValue = currentRow.find(".M" + j).text();
+                        dataCurrentRow.push(currentValue);
+
+                    }
+                    dataMatrix.push("[" + dataCurrentRow + "]");
+                    nieznormalizowane_dane[i - 1] = dataCurrentRow;
+                }
+
+                var nieznormalizowane_2d_array = nieznormalizowane_dane.to2DArray();
+                console.log(nieznormalizowane_2d_array);
+
+
+                var srednie_atrybutow = [];
+                for (var i = 0; i< m; i++){
+                    // po rzędach
+                    var suma_cechy = 0;
+                    for (var j = 0; j< n; j++) {
+                        suma_cechy += parseInt(nieznormalizowane_2d_array[j][i]);
+                    }
+                    srednie_atrybutow[i] = suma_cechy/n;
+                }
+                console.log(srednie_atrybutow);
+            });
+
+
+            /*
+            const dataset = mldatasetiris.getNumbers();
+
+            // dataset is a two-dimensional array where rows represent the samples and columns the features
+            const pca = new PCA(dataset);
+            console.log(pca.getExplainedVariance());
+
+                  const newPoints = [[4.9, 3.2, 1.2, 0.4], [5.4, 3.3, 1.4, 0.9]];
+            console.log(pca.predict(newPoints)); // project new points into the PCA space
+
+            // Operacje na macierzach
+                  var m1 = Matrix.ones(5, 5);
+                  var m2 = Matrix.ones(5, 5);
+
+            var multiplied = m1.mmul(m2);
+                  var determinant = multiplied.det();
+
+                  console.log(multiplied);
+                  console.log(determinant);
+
+            // Możesz odwoływać się też do ml-stat
+            console.log(mlstat.array.sum([1, 2, 3]));
+
+            // I do ml-array-utils
+            console.log(mlarrayutils.applyDotProduct([1, 2, 3], [1, 2, 3]));
+
+            var kosmos = 132;
+            var blabla = new Matrix (([[2,3],[3,4]]), 2);
+            console.log("Czy to macierz?: " + Matrix.isMatrix(blabla) );
+            console.log("Czy to macierz?: " + Matrix.isMatrix(kosmos) );
+            //var blabla_array = Matrix.to2DArray(blabla);
+
+            //console.log(blabla_array[0].length);*/
+        });
+
+      	</script>
     </body>
 </html>

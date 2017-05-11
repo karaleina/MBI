@@ -1,0 +1,34 @@
+<html>
+<head>
+</head>
+<body>
+	<script src="pca-with-dependencies.js"></script>
+	<script>
+	
+	const dataset = mldatasetiris.getNumbers();
+
+	// dataset is a two-dimensional array where rows represent the samples and columns the features
+	const pca = new PCA(dataset);
+	console.log(pca.getExplainedVariance());
+	
+        const newPoints = [[4.9, 3.2, 1.2, 0.4], [5.4, 3.3, 1.4, 0.9]];
+	console.log(pca.predict(newPoints)); // project new points into the PCA space
+
+	// Operacje na macierzach
+        var m1 = Matrix.ones(5, 5);
+        var m2 = Matrix.ones(5, 5);
+
+	var multiplied = m1.mmul(m2);
+        var determinant = multiplied.det();
+
+        console.log(multiplied);
+        console.log(determinant);
+
+	// Możesz odwoływać się też do ml-stat
+	console.log(mlstat.array.sum([1, 2, 3]));
+
+	// I do ml-array-utils
+	console.log(mlarrayutils.applyDotProduct([1, 2, 3], [1, 2, 3]));
+	</script>
+</body>
+</html>

@@ -2,6 +2,17 @@
 $(document).ready(function(){
     console.log("document ready!");
 
+    function getM(){
+      var wymiar_m = $("#wymiar_m").val();
+      console.log("Wybrana liczba m cech = " + wymiar_m);
+      return wymiar_m;
+    }
+    function getN(){
+      var wymiar_n = $("#wymiar_n").val();
+      console.log("Wybrana liczba n cech = " + wymiar_n);
+      return wymiar_n;
+    }
+
     $("td").text("So much fun!");
 
     $("#deleteDataTable").on('click', function() {
@@ -58,16 +69,7 @@ $(document).ready(function(){
 
     });
 
-    function getM(){
-      var wymiar_m = $("#wymiar_m").val();
-      console.log("Wybrana liczba m cech = " + wymiar_m);
-      return wymiar_m;
-    }
-    function getN(){
-      var wymiar_n = $("#wymiar_n").val();
-      console.log("Wybrana liczba n cech = " + wymiar_n);
-      return wymiar_n;
-    }
+
 
     $("#getData").on("click", function(){
         var dataMatrix = [];
@@ -90,6 +92,8 @@ $(document).ready(function(){
             dataMatrix.push("[" + dataCurrentRow + "]");
         }
         console.log("Odczytane dane: " + dataMatrix);
+
+
     });
 
 
