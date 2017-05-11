@@ -131,32 +131,35 @@
                     var tableHeaderRowData = "<th></th>"
                     for (var i = 0; i < wymiar_m ; i++ ){
                         tableNormalRowData += "<td contenteditable ='true'></td>";
-                        //if (i > 0) {
-                        //    tableHeaderRowData += "<th>" + "M" + i + "</th>";
-                        //}
+                        if (i > 0) {
+                            tableHeaderRowData += "<th>" + "M" + i + "</th>";
+                        }
                     }
-                    //ableHeaderRowData += "<th>" + "M" + wymiar_m + "</th>";
+                    tableHeaderRowData += "<th>" + "M" + wymiar_m + "</th>";
 
                     console.log(tableNormalRowData); //jest ok
-                    //console.log(tableHeaderRowData); //jest ok
+                    console.log(tableHeaderRowData); //jest ok
 
                     // tworzenie i dodwanie wierszy
                     var tableRow = "";
-                    //var tableHeaderRow = "";
-                    for (var i = 0; i < wymiar_n; i++){
-                        //if (i = 0) {
-                        //    tableHeaderRow = "<tr>" + tableHeaderRowData + "</tr>";
-                        //    console.log(tableHeaderRow);
-                        //    $('#input_data_table').append(tableHeaderRow);
-                        //}
-                        //else {
-                        tableRow = "<tr>" + tableNormalRowData + "</tr>";
-                        $('#input_data_table').append(tableRow);
-                        //}
+                    var tableHeaderRow = "";
+                    for (var j = 0; j < wymiar_n; j++){
+                        if (j == 0) {
+                            tableHeaderRow = "<tr>" + tableHeaderRowData + "</tr>";
+                            console.log(tableHeaderRow);
+                            $('#input_data_table').append(tableHeaderRow);
+                        }
+                        else {
+                            tableRow = "<tr>" + "<th>" + "N" + j + "</th>" + tableNormalRowData + "</tr>";
+                            console.log(tableRow);
+                            $('#input_data_table').append(tableRow);
+                        }
+
                     }
 
-                    //var tableRow = "<tr>" + "<th>" + "N" + wymiar_n +"</th>" + tableNormalRowData + "</tr>";
-                    //$('#input_data_table').append(tableRow);
+                    tableRow = "<tr>" + "<th>" + "N" + wymiar_n +"</th>" + tableNormalRowData + "</tr>";
+                    console.log(tableRow);
+                    $('#input_data_table').append(tableRow);
 
 
                     function getM(){
