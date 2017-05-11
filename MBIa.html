@@ -24,7 +24,7 @@
                     <form>
                       <p>Liczba <i>m</i> cech</p>
                       <select id="wymiar_m">
-                      		<option value="2">2</option>
+                          <option value="2">2</option>
                       		<option value="3">3</option>
                       		<option value="4">4</option>
                       		<option value="5">5</option>
@@ -47,12 +47,12 @@
 
                     <form class="form-horizontal" role="form">
                         <div id="input_table_print">
-                            <table id="input_data_table" table border="1" cellspacing="5">
+                            <table id="input_data_table" class='hidden' table border="1" cellspacing="5">
                                 <tr>
                                    <th></th>	<th>M1</th>	<th>M2</th>
                                 </tr>
                                 <tr>
-                                   <th>N1</th>	<td contenteditable='true' id="blablabla"></td>	<td contenteditable='true'></td>
+                                   <th>N1</th>	<td contenteditable='true'></td>	<td contenteditable='true'></td>
                                 </tr>
                                 <tr>
                                    <th>N2</th>	<td contenteditable='true'></td>	<td contenteditable='true'></td>
@@ -60,21 +60,21 @@
                             </table>
                         </div>
 
-                        <input type="button" id="createDataTable"  value="Stwórz arkusz"><br/><br/>
+                        <input type="button" id="createDataTable"  value="Stwórz arkusz do wprowadzania danych"><br/><br/>
                         <input type="button" id="deleteDataTable"  value="Usuń arkusz"><br/><br/>
 
                         <div class="form-group">
                             <div class="col-sm-6">
                                 <label for="krokowo" class="col-sm-6 control-label">Działanie krok po kroku</label>
                                 <div class="col-sm-1 control-label">
-                                    <input type="checkbox" class="form-control" id="krokowo" onchange="mbi.onStepCheckboxChanged()"/>
+                                    <input type="checkbox" class="form-control" id="krokowo"/>
                                 </div>
                             </div>
                         </div>
                         <div class="form-actions col-sm-12">
-                            <input type="button" class="btn btn-success" id="getData"  onclick="mbi.getData()" value="Wczytaj dane"><br/><br/>
-                            <input type="button" class="btn btn btn-info" id="setData"  onclick="mbi.setData()" value="Wczytaj przykładowe dane"><br/><br/>
-                            <input type="button" class="btn btn-primary" id="run" onclick="mbi.prefAlg()" disabled="true" value="Start">
+                            <input type="button"  id="getData" value="Wczytaj dane"><br/><br/>
+                            <input type="button"  id="setExampleData" value="Wczytaj przykładowe dane"><br/><br/>
+                            <input type="button"  id="start" value="Start" disabled='true'>
                         </div>
                     </form>
 
@@ -103,14 +103,8 @@
             </div>
         </div>
 
-        <!--<script src="jquery.min.js"></script>-->
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="MBIjavascript.js" ></script>
-
-        <!--<script src="http://www.hammerdir.pl/js/jquery-1.4.2.js" type="text/javascript" charset="utf-8"></script>-->
-
-
-
 
     </body>
 </html>

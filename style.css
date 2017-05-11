@@ -74,3 +74,16 @@ border-top-right-radius: 10px;
   padding: 5px;
   width: 170px;
 }
+
+.visible {
+  visibility: visible;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+table {
+  padding: 0px;
+  margin: 5px; 
+}
