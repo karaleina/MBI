@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>MBI - analiza składowych głównych </title>
@@ -21,64 +21,48 @@
             <div id="sidebar">
                 <div id="content_box">
                    	<h2>Wybierz wymiar danych wejściowych</h2>
-                    <form action="wymiar_m">
-                      <p>Wymiar</p>
-                      <select name="m">
-                      		<option>2</option>
-                      		<option>3</option>
-                      		<option>4</option>
-                      		<option>5</option>
+                    <form>
+                      <p>Liczba <i>m</i> cech</p>
+                      <select id="wymiar_m">
+                      		<option value="2">2</option>
+                      		<option value="3">3</option>
+                      		<option value="4">4</option>
+                      		<option value="5">5</option>
                     	</select>
                     </form>
-                    <form action="wymiar_n">
-                      <p>Ilość danych</p>
-                    	<select name="n">
-                    		<option>1</option>
-                    		<option>2</option>
-                    		<option>3</option>
-                    		<option>4</option>
-                    		<option>5</option>
-                    		<option>6</option>
-                    		<option>7</option>
+                    <form>
+                      <p>Liczba <i>n</i> pomiarów</p>
+                    	<select id="wymiar_n">
+                      		<option value="2">2</option>
+                      		<option value="3">3</option>
+                      		<option value="4">4</option>
+                      		<option value="5">5</option>
+                      		<option value="6">6</option>
+                      		<option value="7">7</option>
                     	</select>
                     </form>
 
                     <h2>Wprowadź dane wejściowe</h2>
-
-                    <div id="form-errors"></div>
+                    <!--<div id="form-errors"></div>-->
 
                     <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                          <label for="x1" class="col-sm- control-label" aria-label="Right Align"> Stwórz macierz danych wejściowych</label><br/><br/>
-                            <div class="input-group">
-                                <textarea class="form-control custom-control" rows="1" style="resize:none" id="x1"></textarea>
-                                <span class="input-group-addon btn btn-primary" data-toggle="tooltip" data-placement="left" title="Ex.&#13 1 2 3 ">x1</span>
-                            </div>
+                        <div id="input_table_print">
+                            <table id="input_data_table" table border="1" cellspacing="5">
+                                <tr>
+                                   <th></th>	<th>M1</th>	<th>M2</th>
+                                </tr>
+                                <tr>
+                                   <th>N1</th>	<td contenteditable='true' id="blablabla"></td>	<td contenteditable='true'></td>
+                                </tr>
+                                <tr>
+                                   <th>N2</th>	<td contenteditable='true'></td>	<td contenteditable='true'></td>
+                                </tr>
+                            </table>
                         </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <textarea class="form-control custom-control" rows="1" style="resize:none" id="x2"></textarea>
-                                <span class="input-group-addon btn btn-primary" data-toggle="tooltip" data-placement="left" title="Ex.&#13 1 2 3 ">x2</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <textarea class="form-control custom-control" rows="1" style="resize:none" id="x3"></textarea>
-                                <span class="input-group-addon btn btn-primary" data-toggle="tooltip" data-placement="left" title="Ex.&#13 1 2 3 ">x3</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <textarea class="form-control custom-control" rows="1" style="resize:none"  id="x4"></textarea>
-                                <span class="input-group-addon btn btn-primary" data-toggle="tooltip" data-placement="left" title="Ex.&#13 1 2 3 ">x4</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="input-group">
-                                <textarea class="form-control custom-control" rows="1" style="resize:none"  id="x5"></textarea>
-                                <span class="input-group-addon btn btn-primary" data-toggle="tooltip" data-placement="left" title="Ex.&#13 1 2 3 ">x5</span>
-                            </div>
-                        </div>
+
+                        <input type="button" id="createDataTable"  value="Stwórz arkusz"><br/><br/>
+                        <input type="button" id="deleteDataTable"  value="Usuń arkusz"><br/><br/>
+
                         <div class="form-group">
                             <div class="col-sm-6">
                                 <label for="krokowo" class="col-sm-6 control-label">Działanie krok po kroku</label>
@@ -107,31 +91,91 @@
                 <p>Poszczególne kroki</p>
                 <table table border="1" cellspacing="5">
                     <tr>
-                    	 <th></th>	<th>Z1</th>	<th>Z2</th>
+                    	 <th></th>	<th>M1</th>	<th>M2</th>
                     </tr>
                     <tr>
-                    	 <th>x1</th>	<td>...</td>	<td>...</td>
+                    	 <th>N1</th>	<td>...</td>	<td>...</td>
                     </tr>
                     <tr>
-                    	 <th>x2</th>	<td>...</td>	<td>...</td>
+                    	 <th>N2</th>	<td>...</td>	<td>...</td>
                     </tr>
                 </table>
             </div>
         </div>
 
-        <script src="http://www.hammerdir.pl/js/jquery-1.4.2.js" type="text/javascript" charset="utf-8"></script>
+        <!--<script src="jquery.min.js"></script>-->
+        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+
+
+        <!--<script src="http://www.hammerdir.pl/js/jquery-1.4.2.js" type="text/javascript" charset="utf-8"></script>-->
+
 
         <script type="text/javascript">
-           function templatespokaz(id){
-             var myField = document.getElementById(id);
-             var myClass = myField.className;
-             if (myClass == "hide"){
-                myClass = "show";}
-             else{
-                myClass = "hide";}
-             myField.className = myClass;
-            }
+            $(document).ready(function(){
+                console.log("document ready!");
+
+                $("td").text("So much fun!");
+
+                $("#deleteDataTable").on('click', function() {
+                    $('#input_data_table').find("tr").remove();
+                });
+
+                $("#createDataTable").on('click', function(){
+
+                    //pobieranie wymiarów m i n (liczby cech i liczby próbek)
+                    var wymiar_m = getM();
+                    var wymiar_n = getN();
+
+                    //tworzenie danych wierszy
+                    var tableNormalRowData = "";
+                    var tableHeaderRowData = "<th></th>"
+                    for (var i = 0; i < wymiar_m ; i++ ){
+                        tableNormalRowData += "<td contenteditable ='true'></td>";
+                        //if (i > 0) {
+                        //    tableHeaderRowData += "<th>" + "M" + i + "</th>";
+                        //}
+                    }
+                    //ableHeaderRowData += "<th>" + "M" + wymiar_m + "</th>";
+
+                    console.log(tableNormalRowData); //jest ok
+                    //console.log(tableHeaderRowData); //jest ok
+
+                    // tworzenie i dodwanie wierszy
+                    var tableRow = "";
+                    //var tableHeaderRow = "";
+                    for (var i = 0; i < wymiar_n; i++){
+                        //if (i = 0) {
+                        //    tableHeaderRow = "<tr>" + tableHeaderRowData + "</tr>";
+                        //    console.log(tableHeaderRow);
+                        //    $('#input_data_table').append(tableHeaderRow);
+                        //}
+                        //else {
+                        tableRow = "<tr>" + tableNormalRowData + "</tr>";
+                        $('#input_data_table').append(tableRow);
+                        //}
+                    }
+
+                    //var tableRow = "<tr>" + "<th>" + "N" + wymiar_n +"</th>" + tableNormalRowData + "</tr>";
+                    //$('#input_data_table').append(tableRow);
+
+
+                    function getM(){
+                      var wymiar_m = $("#wymiar_m").val();
+                      console.log("Wybrana liczba m cech = " + wymiar_m);
+                      return wymiar_m;
+                    }
+                    function getN(){
+                      var wymiar_n = $("#wymiar_n").val();
+                      console.log("Wybrana liczba n cech = " + wymiar_n);
+                      return wymiar_n;
+                    }
+
+                  });
+
+              });
+
+
         </script>
-        
+
     </body>
 </html>
