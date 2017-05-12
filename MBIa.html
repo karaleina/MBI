@@ -227,6 +227,25 @@
 
           }
 
+          function countCovarianceMatrix(matrix, m){
+              var m = parseInt(m);
+              var covarianceMatrix = new Matrix(m, m);
+              for (var i=0; i<m; i++){
+                  var motherVector = matrix.getColumnVector(i);
+
+                  for (var j=0; j<m; j++){
+                      var cov = 0;
+                      var currentVector = matrix.getColumnVector(j);
+                      for (var k=0; k< currentVector.length ; k++ ){
+                          cov += currentVector[k]*motherVector[k];
+                      }
+                      covarianceMatrix[i][j] = cov;
+                      console.log(covarianceMatrix[i][j]);
+                  }
+              }
+              return covarianceMatrix;
+          }
+
 
             $("#getData").on("click", function(){
                 var m = getM();
@@ -267,6 +286,16 @@
                 $("#steps").append("<h3>Otrzymana znormalizowana macierz danych:</h3>");
                 var table = convertMatrixIntoHtmlTable(znormalizowane_dane.to2DArray(), m, n);
                 $("#steps").append(table);
+
+                var covarianceMatrix = countCovarianceMatrix(znormalizowane_dane, m);
+                var covariance_table = convertMatrixIntoHtmlTable(covarianceMatrix.to2DArray(), m, m);
+
+                $("#steps").append("<h2>Krok 2:</h2>")
+                            .append("<h3>Wzór, z którego zostanie wyznaczona macierz kowariancji:</h3>")
+                            .append("<img src=krok2.jpg></img>")
+                            .append("<h3>Obliczona macierz kowariancji między cechami:</h3>")
+                            .append(covariance_table);
+
 
             });
 
