@@ -71,30 +71,7 @@ $(document).ready(function(){
 
 
 
-    $("#getData").on("click", function(){
-        var dataMatrix = [];
-        var m = getM();
-        var n = getN();
 
-        console.log("Rozpoczęto wczytywanie danych...");
-
-        var currentValue = 0;
-        var currentRow = 0;
-        var dataCurrentRow = [];
-
-        for( var i = 1; i <= n; i++){
-            dataCurrentRow=[];
-            currentRow = $('#input_data_table').find(".N" + i);
-            for (var j = 1; j<= m; j++){
-                currentValue = currentRow.find(".M" + j).text();
-                dataCurrentRow.push(currentValue);
-            }
-            dataMatrix.push("[" + dataCurrentRow + "]");
-        }
-        console.log("Odczytane dane: " + dataMatrix);
-
-
-    });
 
 
   });

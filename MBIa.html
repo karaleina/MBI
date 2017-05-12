@@ -73,8 +73,8 @@
                         </div>
                         <div class="form-actions col-sm-12">
                             <input type="button"  id="getData" value="Wczytaj dane"><br/><br/>
-                            <input type="button"  id="setExampleData" value="Wczytaj przykładowe dane"><br/><br/>
-                            <input type="button"  id="start" value="Start" disabled='true'>
+                            <!-- <input type="button"  id="setExampleData" value="Wczytaj przykładowe dane"><br/><br/>
+                            <input type="button"  id="start" value="Start" disabled='true'> -->
                         </div>
                     </form>
 
@@ -114,18 +114,25 @@
               return wymiar_n;
             }
 
-            $("#getData").on("click", function(){
+            function countMeans(array, m, n){
 
-                var dataMatrix = [];
-                var m = getM();
-                var n = getN();
+              var srednie_atrybutow = [];
+              for (var i = 0; i< m; i++){
+                  // po rzędach
+                  var suma_cechy = 0;
+                  for (var j = 0; j< n; j++) {
+                      suma_cechy += parseFloat(array[j][i]);
+                  }
+                  srednie_atrybutow[i] = suma_cechy/n;
+              }
+              return srednie_atrybutow;
+            }
+
+            function translateDataIntoMatrix(m, n) {
 
                 console.log("Zainicjalizowano macierz przechowującą dane...");
-
-                var nieznormalizowane_dane = new Matrix(parseInt(n),  parseInt(m));
-
-                console.log("Rozpoczęto wczytywanie danych...");
-
+                var nieznormalizowane_dane = new Matrix(parseFloat(n),  parseFloat(m));
+                var dataMatrix = [];
                 var currentValue = 0;
                 var currentRow = 0;
                 var dataCurrentRow = [];
@@ -141,20 +148,16 @@
                     dataMatrix.push("[" + dataCurrentRow + "]");
                     nieznormalizowane_dane[i - 1] = dataCurrentRow;
                 }
+                return nieznormalizowane_dane;
+            }
 
+            $("#getData").on("click", function(){
+                var m = getM();
+                var n = getN();
+
+                var nieznormalizowane_dane = translateDataIntoMatrix(m, n);
                 var nieznormalizowane_2d_array = nieznormalizowane_dane.to2DArray();
-                console.log(nieznormalizowane_2d_array);
-
-
-                var srednie_atrybutow = [];
-                for (var i = 0; i< m; i++){
-                    // po rzędach
-                    var suma_cechy = 0;
-                    for (var j = 0; j< n; j++) {
-                        suma_cechy += parseInt(nieznormalizowane_2d_array[j][i]);
-                    }
-                    srednie_atrybutow[i] = suma_cechy/n;
-                }
+                var srednie_atrybutow = countMeans(nieznormalizowane_2d_array, m, n);
                 console.log(srednie_atrybutow);
             });
 
