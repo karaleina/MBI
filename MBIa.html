@@ -167,19 +167,42 @@
                 return nieznormalizowane_dane;
             }
 
-            $("#getData").on("click", function(){
+            function normalization(){
                 var m = getM();
                 var n = getN();
 
                 var nieznormalizowane_dane = translateDataIntoMatrix(m, n);
                 var nieznormalizowane_2d_array = nieznormalizowane_dane.to2DArray();
+
                 var srednie_atrybutow = countMeans(nieznormalizowane_2d_array, m, n);
                 console.log(srednie_atrybutow);
 
                 var wariancja_atrybutow = countVariance(nieznormalizowane_2d_array, srednie_atrybutow, m, n );
                 console.log(wariancja_atrybutow);
 
+                for(var i = 1 ; i <= m; i++) {
+                    var column_vector = nieznormalizowane_dane.getColumnVector(i-1);
+                    console.log(column_vector);
+                    column_vector = column_vector.map( function(value) {
+                        return (value - srednie_atrybutow[i-1])/wariancja_atrybutow[i-1];
+                    } );
+                    console.log(column_vector);
+                    nieznormalizowane_dane.setColumn(i-1, column_vector);
+                }
+
+                console.log(nieznormalizowane_dane);
+
+            }
+
+
+            $("#getData").on("click", function(){
+
+
+                normalization();
+
             });
+
+
 
 
             /*
