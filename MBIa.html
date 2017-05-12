@@ -104,28 +104,44 @@
             var nieznormalizowane_dane = null;
 
             function getM(){
-              var wymiar_m = $("#wymiar_m").val();
-              console.log("Wybrana liczba m cech = " + wymiar_m);
-              return wymiar_m;
+                var wymiar_m = $("#wymiar_m").val();
+                console.log("Wybrana liczba m cech = " + wymiar_m);
+                return wymiar_m;
             }
             function getN(){
-              var wymiar_n = $("#wymiar_n").val();
-              console.log("Wybrana liczba n cech = " + wymiar_n);
-              return wymiar_n;
+                var wymiar_n = $("#wymiar_n").val();
+                console.log("Wybrana liczba n cech = " + wymiar_n);
+                return wymiar_n;
             }
 
             function countMeans(array, m, n){
 
-              var srednie_atrybutow = [];
-              for (var i = 0; i< m; i++){
-                  // po rzędach
-                  var suma_cechy = 0;
-                  for (var j = 0; j< n; j++) {
-                      suma_cechy += parseFloat(array[j][i]);
+                var srednie_atrybutow = [];
+                for (var i = 0; i< m; i++){
+                    // po rzędach
+                    var suma_cechy = 0;
+                    for (var j = 0; j< n; j++) {
+                        suma_cechy += parseFloat(array[j][i]);
+                    }
+                    srednie_atrybutow[i] = suma_cechy/n;
+                }
+                return srednie_atrybutow;
+            }
+
+            function countVariance(array, srednie_atrybutow, m, n ){
+                  //TODO porawic bo cos nie dziala
+                  var wariancja_cechy = [];
+                  //idziemy po cechach
+                  for(var i = 0; i < m; i++){
+                      var suma_kwadratow = 0;
+                      //idziemy po rzędach
+                      for (var j = 0; j< n; j++) {
+                          var currentValue = parseFloat(array[j][i]);
+                          suma_kwadratow += (currentValue - srednie_atrybutow[i])*(currentValue - srednie_atrybutow[i]);
+                      }
+                      wariancja_cechy[i] = suma_kwadratow / n;
                   }
-                  srednie_atrybutow[i] = suma_cechy/n;
-              }
-              return srednie_atrybutow;
+                  return wariancja_cechy;
             }
 
             function translateDataIntoMatrix(m, n) {
@@ -159,6 +175,10 @@
                 var nieznormalizowane_2d_array = nieznormalizowane_dane.to2DArray();
                 var srednie_atrybutow = countMeans(nieznormalizowane_2d_array, m, n);
                 console.log(srednie_atrybutow);
+
+                var wariancja_atrybutow = countVariance(nieznormalizowane_2d_array, srednie_atrybutow, m, n );
+                console.log(wariancja_atrybutow);
+
             });
 
 
