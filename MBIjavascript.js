@@ -15,7 +15,7 @@ $(document).ready(function(){
 
     $("#deleteDataTable").on('click', function() {
         $('#input_data_table').find("tr").remove();
-        $('#input_data_table').addClass('hidden')
+        $('.user_input').addClass('hidden')
                               .removeClass('visible');
     });
 
@@ -27,7 +27,7 @@ $(document).ready(function(){
         var wymiar_m = getM();
         var wymiar_n = getN();
 
-        $('#input_data_table').removeClass('hidden')
+        $('.user_input').removeClass('hidden')
                               .addClass('visible');
         //tworzenie danych wierszy
         var tableNormalRowData = "";

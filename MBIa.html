@@ -42,12 +42,14 @@
                     	</select>
                     </form>
 
-                    <h2>Wprowadź dane wejściowe</h2>
+
                     <!--<div id="form-errors"></div>-->
 
                     <form class="form-horizontal" role="form">
+                        <input type="button" id="createDataTable"  value="Stwórz arkusz"><br/><br/>
+
                         <div id="input_table_print">
-                            <table id="input_data_table" class='hidden' table border="1" cellspacing="5">
+                            <table id="input_data_table" class='hidden user_input' table border="1" cellspacing="5">
                                 <tr>
                                    <th></th>	<th>M1</th>	<th>M2</th>
                                 </tr>
@@ -60,24 +62,24 @@
                             </table>
                         </div>
 
-                        <input type="button" id="createDataTable"  value="Stwórz arkusz do wprowadzania danych"><br/><br/>
-                        <input type="button" id="deleteDataTable"  value="Usuń arkusz"><br/><br/>
+
+                        <input type="button" id="deleteDataTable"  class="user_input hidden" value="Usuń arkusz"><br/><br/>
 
                         <div class="form-group">
-                            <div class="col-sm-6">
-                                <label for="krokowo" class="col-sm-6 control-label">Działanie krok po kroku</label>
+                            <div class="user_input hidden" >
+                            <h2>Opcje:</h2>
+                                <label for="krokowo" class="col-sm-6 control-label">krok po kroku</label>
                                 <div class="col-sm-1 control-label">
                                     <input type="checkbox" class="form-control" id="krokowo"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-actions col-sm-12">
-                            <input type="button"  id="getData" value="Wczytaj dane"><br/><br/>
+                        <div class="form-actions">
+                            <input type="button"  id="getData" class="user_input hidden" value="START"><br/><br/>
                             <!-- <input type="button"  id="setExampleData" value="Wczytaj przykładowe dane"><br/><br/>
                             <input type="button"  id="start" value="Start" disabled='true'> -->
                         </div>
                     </form>
-
                 </div>
 
             </div>
