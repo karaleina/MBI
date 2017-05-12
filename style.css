@@ -27,11 +27,20 @@
 
 .visible {
   visibility: visible;
+
+
 }
 
 .hidden {
   visibility: hidden;
+
 }
+
+ul .hidden {
+  display: none;
+}
+
+
 
 table, th, td {
     border: 1px solid black;
@@ -51,4 +60,10 @@ img {
 
 form {
     margin: 15px auto;
+}
+
+ul li {
+    display: inline;
+    list-style-type: none;
+
 }

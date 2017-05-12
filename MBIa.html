@@ -83,8 +83,16 @@
 
             <div id="solid" class="border">
                 <h2>Działanie algorytmu</h2>
-                    <div id="steps">
-                    </div>
+                    <p>Algorytm PCA, czyli algorytm składowych głównych składa się z trzech kroków. W pierwszym z nich dane wejściowe są normalizowane.
+                    Drugi krok polega na wyznaczeniu macierzy kowariancji między cechami. W trzecim poszukiwana jest macierz dające przekształcenie macierzy kowariancji do postaci diagonalnej.
+                  </p>
+                    <ul class="steps_buttons">
+                        <li><button class="first_step hidden">Pierwszy krok</button></li>
+                        <li><button class="second_step hidden">Drugi krok</button></li>
+                        <li><button class="third_step hidden">Trzeci krok</button></li>
+                    </ul>
+
+                    <div id="steps"></div>
             </div>
         </div>
 
@@ -94,9 +102,11 @@
 
         <script>
 
+        var covarianceMatrix = null;
+
         $(document).ready(function(){
 
-            var nieznormalizowane_dane = null;
+            var covarianceMatrix = null;
 
             function getM(){
                 var wymiar_m = $("#wymiar_m").val();
@@ -248,6 +258,21 @@
 
 
             $("#getData").on("click", function(){
+
+                $(".first_step").addClass("hidden");
+                $(".first_step").removeClass("visible");
+
+
+                $(".third_step").addClass("hidden");
+                $(".third_step").removeClass("visible");
+
+
+                $(".second_step").addClass("visible");
+                $(".second_step").removeClass("hidden");
+                $(".second_step").text("DALEJ");
+
+
+
                 var m = getM();
                 var n = getN();
 
@@ -287,17 +312,63 @@
                 var table = convertMatrixIntoHtmlTable(znormalizowane_dane.to2DArray(), m, n);
                 $("#steps").append(table);
 
-                var covarianceMatrix = countCovarianceMatrix(znormalizowane_dane, m);
-                var covariance_table = convertMatrixIntoHtmlTable(covarianceMatrix.to2DArray(), m, m);
-
-                $("#steps").append("<h2>Krok 2:</h2>")
-                            .append("<h3>Wzór, z którego zostanie wyznaczona macierz kowariancji:</h3>")
-                            .append("<img src=krok2.jpg></img>")
-                            .append("<h3>Obliczona macierz kowariancji między cechami:</h3>")
-                            .append(covariance_table);
+                covarianceMatrix = countCovarianceMatrix(znormalizowane_dane, m);
 
 
-            });
+
+          });
+
+          $(".first_step").on("click", function() {
+              $("#getData").trigger("click");
+
+          });
+
+          $(".second_step").on("click", function(){
+
+              $("#steps").empty();
+              $(".first_step").addClass("visible");
+              $(".first_step").removeClass("hidden");
+              $(".first_step").text("WSTECZ");
+
+
+
+              $(".third_step").addClass("visible");
+              $(".third_step").removeClass("hidden");
+              $(".third_step").text("DALEJ");
+
+
+              $(".second_step").addClass("hidden");
+              $(".second_step").removeClass("visible");
+
+
+              var m = getM();
+              var covariance_table = convertMatrixIntoHtmlTable(covarianceMatrix.to2DArray(), m, m);
+
+              $("#steps").append("<h2>Krok 2:</h2>")
+                          .append("<h3>Wzór, z którego zostanie wyznaczona macierz kowariancji:</h3>")
+                          .append("<img src=krok2.jpg></img>")
+                          .append("<h3>Obliczona macierz kowariancji między cechami:</h3>")
+                          .append(covariance_table);
+          });
+
+          $(".third_step").on("click", function(){
+
+              $("#steps").empty();
+              $(".first_step").addClass("hidden");
+              $(".first_step").removeClass("visible");
+
+              $(".third_step").addClass("hidden");
+              $(".third_step").removeClass("visible");
+
+              $(".second_step").addClass("visible");
+              $(".second_step").removeClass("hidden");
+              $(".second_step").text("WSTECZ");
+
+              $("#steps").empty();
+              $("#steps").append("<h2>Krok 3:</h2>");
+          });
+
+
 
 
 
