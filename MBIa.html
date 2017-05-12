@@ -83,9 +83,13 @@
 
             <div id="solid" class="border">
                 <h2>Działanie algorytmu</h2>
+
                     <p>Algorytm PCA, czyli algorytm składowych głównych składa się z trzech kroków. W pierwszym z nich dane wejściowe są normalizowane.
-                    Drugi krok polega na wyznaczeniu macierzy kowariancji między cechami. W trzecim poszukiwana jest macierz dające przekształcenie macierzy kowariancji do postaci diagonalnej.
-                  </p>
+                    Drugi krok polega na wyznaczeniu macierzy kowariancji między cechami.
+                    W trzecim kroku poszukiwane jest takie ​ przekształcenie <i>P</i> macierzy kowariancji​, aby otrzymać​ postać diagonalną.
+                    Na podstawie tego przekształcenia wyznaczane są wektory własne i wartości własne. Otrzymane wektory własne są nowymi ​ składowymi głównymi​,
+                     a ​ wartości własne​ niosą informację, jak dużo wariancji przynależy do danego wektora własnego​.</p>
+
                     <ul class="steps_buttons">
                         <li><button class="first_step hidden">Pierwszy krok</button></li>
                         <li><button class="second_step hidden">Drugi krok</button></li>
@@ -353,6 +357,7 @@
 
           $(".third_step").on("click", function(){
 
+              var m = getM();
               $("#steps").empty();
               $(".first_step").addClass("hidden");
               $(".first_step").removeClass("visible");
@@ -366,6 +371,14 @@
 
               $("#steps").empty();
               $("#steps").append("<h2>Krok 3:</h2>");
+
+              var pca = new PCA(covarianceMatrix, {isCovarianceMatrix:'true', scale:'false', center:'false' });
+              var lambdas = pca.getEigenvalues();
+              var diagonalMartix = Matrix.diag(lambdas);
+              $("#steps").append("<h3>Postać diagonalna macierzy kowariancji:</h3>")
+                          .append(convertMatrixIntoHtmlTable(diagonalMartix.to2DArray(), m, m ));
+
+
           });
 
 
