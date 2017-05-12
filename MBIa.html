@@ -377,6 +377,11 @@
               var diagonalMartix = Matrix.diag(lambdas);
               $("#steps").append("<h3>Postać diagonalna macierzy kowariancji:</h3>")
                           .append(convertMatrixIntoHtmlTable(diagonalMartix.to2DArray(), m, m ));
+              $("#steps").append("<h3>Wzór, który wiąże obie macierze kowariancji za pomocą przekształcenia <i>P</i> </h3>")
+                          .append("<img src=krok3.jpg></img>");
+              var eigenVectorsMatrix = pca.getEigenvectors();
+              $("#steps").append("<h3>Wektory własne - macierz przekształcenia <i>P</i> </h3>")
+                          .append(convertMatrixIntoHtmlTable(eigenVectorsMatrix.to2DArray(), m, m ));
 
 
           });
