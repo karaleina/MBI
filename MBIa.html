@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>MBI - analiza składowych głównych </title>
-        <link rel="stylesheet" type="text/css" href="http://www.templatki.net/podglad/business-template-blog/css/style.css" />
+        <!--<link rel="stylesheet" type="text/css" href="http://www.templatki.net/podglad/business-template-blog/css/style.css" />-->
         <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
 
@@ -105,12 +105,10 @@
 
             function getM(){
                 var wymiar_m = $("#wymiar_m").val();
-                console.log("Wybrana liczba m cech = " + wymiar_m);
                 return wymiar_m;
             }
             function getN(){
                 var wymiar_n = $("#wymiar_n").val();
-                console.log("Wybrana liczba n cech = " + wymiar_n);
                 return wymiar_n;
             }
 
@@ -128,9 +126,9 @@
                 return srednie_atrybutow;
             }
 
-            function countVariance(array, srednie_atrybutow, m, n ){
+            function countStd(array, srednie_atrybutow, m, n ){
                   //TODO porawic bo cos nie dziala
-                  var wariancja_cechy = [];
+                  var odchylenie_cechy = [];
                   //idziemy po cechach
                   for(var i = 0; i < m; i++){
                       var suma_kwadratow = 0;
@@ -139,9 +137,9 @@
                           var currentValue = parseFloat(array[j][i]);
                           suma_kwadratow += (currentValue - srednie_atrybutow[i])*(currentValue - srednie_atrybutow[i]);
                       }
-                      wariancja_cechy[i] = suma_kwadratow / n;
+                      odchylenie_cechy[i] = Math.sqrt(suma_kwadratow / n);
                   }
-                  return wariancja_cechy;
+                  return odchylenie_cechy;
             }
 
             function translateDataIntoMatrix(m, n) {
@@ -167,7 +165,60 @@
                 return nieznormalizowane_dane;
             }
 
-            function normalization(){
+            function normalization(srednie_atrybutow, odchylenie_atrybutow, nieznormalizowane_dane){
+                var m = getM();
+                var n = getN();
+
+                var nieznormalizowane_dane = translateDataIntoMatrix(m, n);
+                var nieznormalizowane_2d_array = nieznormalizowane_dane.to2DArray();
+
+                for(var i = 1 ; i <= m; i++) {
+                    var column_vector = nieznormalizowane_dane.getColumnVector(i-1);
+                    column_vector = column_vector.map( function(value) {
+                        return (value - srednie_atrybutow[i-1])/odchylenie_atrybutow[i-1];
+                    } );
+                    nieznormalizowane_dane.setColumn(i-1, column_vector);
+                }
+
+                var znormalizowane_dane = nieznormalizowane_dane;
+                return znormalizowane_dane;
+
+            }
+
+          function convertMatrixIntoHtmlTable(matrix, m,  n){
+                var matrix_2d_array = matrix.to2DArray();
+
+                var table = $("<table class=results></table>");
+
+                var firstrow = $("<tr><th></th></tr>");
+                for (var k = 1; k <= m; k++){
+
+                    firstrow.append("<th>M" + k  +  "</th>");
+                }
+
+                table.append(firstrow);
+
+                for(var i = 0; i < n; i++ ){
+                    var current_array_row = matrix_2d_array[i];
+                    var current_table_row = $("<tr><th>N" + parseInt(i+1) + "</th></tr>");
+
+                    for(var j = 0; j < m; j++){
+                        var current_data = current_array_row[j];
+                        current_table_row.append("<td>" + current_data + "</td>");
+                    }
+
+                    table.append(current_table_row);
+                    //table.append("<tr>" + current_table_row + "</tr>");
+                }
+
+                //table = $("<table>" + table + "</table>");
+                console.log(table);
+                return table;
+
+          }
+
+
+            $("#getData").on("click", function(){
                 var m = getM();
                 var n = getN();
 
@@ -177,28 +228,22 @@
                 var srednie_atrybutow = countMeans(nieznormalizowane_2d_array, m, n);
                 console.log(srednie_atrybutow);
 
-                var wariancja_atrybutow = countVariance(nieznormalizowane_2d_array, srednie_atrybutow, m, n );
-                console.log(wariancja_atrybutow);
-
-                for(var i = 1 ; i <= m; i++) {
-                    var column_vector = nieznormalizowane_dane.getColumnVector(i-1);
-                    console.log(column_vector);
-                    column_vector = column_vector.map( function(value) {
-                        return (value - srednie_atrybutow[i-1])/wariancja_atrybutow[i-1];
-                    } );
-                    console.log(column_vector);
-                    nieznormalizowane_dane.setColumn(i-1, column_vector);
-                }
-
-                console.log(nieznormalizowane_dane);
-
-            }
+                var odchylenie_atrybutow = countStd(nieznormalizowane_2d_array, srednie_atrybutow, m, n );
+                console.log(odchylenie_atrybutow);
 
 
-            $("#getData").on("click", function(){
 
+                var znormalizowane_dane = normalization(srednie_atrybutow, odchylenie_atrybutow, nieznormalizowane_dane);
+                console.log(znormalizowane_dane);
+                var table = convertMatrixIntoHtmlTable(znormalizowane_dane, getM(), getN());
 
-                normalization();
+                //czyść
+                $("#steps").empty();
+
+                //odchylenie i średnia
+                $("#steps").append("<h2>Średnia z cech</h2>");
+                $("#steps").append("<h2>Otrzymana znormalizowana macierz danych </h2>");
+                $("#steps").append(table);
 
             });
 
