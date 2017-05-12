@@ -1,11 +1,18 @@
 #header {
   text-align: center;
+  margin: auto;
+  background-color: blue;
+  width: 80%;
+  padding: 20px;
+  color: white;
 }
 
 #container {
     width: 80%;
     margin: auto;
     text-align: center;
+    border: 3px solid black;
+    height: 100%;
 }
 
 #sidebar {

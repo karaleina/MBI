@@ -11,8 +11,6 @@ $(document).ready(function(){
       return wymiar_n;
     }
 
-    $("td").text("So much fun!");
-
     $("#deleteDataTable").on('click', function() {
         $('#input_data_table').find("tr").remove();
         $('.user_input').addClass('hidden')
