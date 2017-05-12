@@ -4,12 +4,10 @@ $(document).ready(function(){
 
     function getM(){
       var wymiar_m = $("#wymiar_m").val();
-      console.log("Wybrana liczba m cech = " + wymiar_m);
       return wymiar_m;
     }
     function getN(){
       var wymiar_n = $("#wymiar_n").val();
-      console.log("Wybrana liczba n cech = " + wymiar_n);
       return wymiar_n;
     }
 
@@ -43,28 +41,22 @@ $(document).ready(function(){
         }
         tableHeaderRowData += "<th>" + "M" + wymiar_m + "</th>";
 
-        console.log(tableNormalRowData); //jest ok
-        console.log(tableHeaderRowData); //jest ok
-
         // tworzenie i dodwanie wierszy
         var tableRow = "";
         var tableHeaderRow = "";
         for (var j = 0; j < wymiar_n; j++){
             if (j == 0) {
                 tableHeaderRow = "<tr>" + tableHeaderRowData + "</tr>";
-                console.log(tableHeaderRow);
                 $('#input_data_table').append(tableHeaderRow);
             }
             else {
                 tableRow = "<tr class=" + "N" + j +">" + "<th>" + "N" + j + "</th>" + tableNormalRowData + "</tr>";
-                console.log(tableRow);
                 $('#input_data_table').append(tableRow);
             }
 
         }
 
         tableRow = "<tr class=" + "N" + wymiar_n +">" + "<th>" + "N" + wymiar_n +"</th>" + tableNormalRowData + "</tr>";
-        console.log(tableRow);
         $('#input_data_table').append(tableRow);
 
     });

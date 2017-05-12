@@ -144,7 +144,6 @@
 
             function translateDataIntoMatrix(m, n) {
 
-                console.log("Zainicjalizowano macierz przechowującą dane...");
                 var nieznormalizowane_dane = new Matrix(parseFloat(n),  parseFloat(m));
                 var dataMatrix = [];
                 var currentValue = 0;
@@ -185,8 +184,8 @@
 
             }
 
-          function convertMatrixIntoHtmlTable(matrix, m,  n){
-                var matrix_2d_array = matrix.to2DArray();
+          function convertMatrixIntoHtmlTable(matrix_2d_array, m,  n){
+                //var matrix_2d_array = matrix.to2DArray();
 
                 var table = $("<table class=results></table>");
 
@@ -212,7 +211,23 @@
                 }
 
                 //table = $("<table>" + table + "</table>");
-                console.log(table);
+                return table;
+
+          }
+
+          function convertArrayIntoTable(array, m){
+
+                var table = $("<table class=results></table>");
+
+                var firstrow = $("<tr></tr>");
+                var lastrow = $("<tr></tr>");
+                for (var k = 1; k <= m; k++){
+                    firstrow.append("<th>M" + k  +  "</th>");
+                    lastrow.append("<td>" + array [k - 1] + "</td>");
+                }
+                table.append(firstrow);
+                table.append(lastrow);
+
                 return table;
 
           }
@@ -231,18 +246,26 @@
                 var odchylenie_atrybutow = countStd(nieznormalizowane_2d_array, srednie_atrybutow, m, n );
                 console.log(odchylenie_atrybutow);
 
-
-
                 var znormalizowane_dane = normalization(srednie_atrybutow, odchylenie_atrybutow, nieznormalizowane_dane);
-                console.log(znormalizowane_dane);
-                var table = convertMatrixIntoHtmlTable(znormalizowane_dane, getM(), getN());
 
                 //czyść
                 $("#steps").empty();
 
-                //odchylenie i średnia
-                $("#steps").append("<h2>Średnia z cech</h2>");
-                $("#steps").append("<h2>Otrzymana znormalizowana macierz danych </h2>");
+                $("#steps").append("<h2>Krok 1:</h2>");
+
+                //średnia
+                $("#steps").append("<h3>Średnia z cech:</h3>");
+                var srednia_cech_table = convertArrayIntoTable(srednie_atrybutow, m);
+                $("#steps").append(srednia_cech_table);
+
+                //odchylenie
+                $("#steps").append("<h3>Odchylenie z cech:</h3>");
+                var odchylenie_cech_table = convertArrayIntoTable(odchylenie_atrybutow, m);
+                $("#steps").append(odchylenie_cech_table);
+
+                //macierz znormalizowana`
+                $("#steps").append("<h3>Otrzymana znormalizowana macierz danych:</h3>");
+                var table = convertMatrixIntoHtmlTable(znormalizowane_dane.to2DArray(), m, n);
                 $("#steps").append(table);
 
             });
