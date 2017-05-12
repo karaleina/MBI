@@ -75,6 +75,21 @@ border-top-right-radius: 10px;
   width: 170px;
 }
 
+#container {
+    width: 80%;
+    margin: auto;
+}
+
+#sidebar {
+    float: left;
+    width: 50%;
+}
+
+#solid {
+    float: right;
+    width: 50%;
+}
+
 .visible {
   visibility: visible;
 }
@@ -87,5 +102,10 @@ table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
     margin: auto;
-    padding: 2px; 
+    padding: 2px;
+}
+
+img {
+    display: block;
+    margin: auto;
 }

@@ -80,14 +80,10 @@
 
                 </div>
 
-                <div id="content_box">
-                    <h2>Wzór z którego korzystamy:</h2>
-                </div>
-
             </div>
 
             <div id="solid" class="border">
-                <div class="solid_title1">Działanie algorytmu</div>
+                <h2>Działanie algorytmu</h2>
                     <div id="steps">
                     </div>
             </div>
@@ -251,6 +247,8 @@
                 //czyść
                 $("#steps").empty();
 
+
+
                 $("#steps").append("<h2>Krok 1:</h2>");
 
                 //średnia
@@ -262,6 +260,9 @@
                 $("#steps").append("<h3>Odchylenie z cech:</h3>");
                 var odchylenie_cech_table = convertArrayIntoTable(odchylenie_atrybutow, m);
                 $("#steps").append(odchylenie_cech_table);
+
+                $("#steps").append("<h3>Wzór, pod który podstawiamy:</h3>")
+                $("#steps").append("<img src=krok1.jpg></img>");
 
                 //macierz znormalizowana`
                 $("#steps").append("<h3>Otrzymana znormalizowana macierz danych:</h3>");
