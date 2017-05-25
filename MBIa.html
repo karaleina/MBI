@@ -228,7 +228,7 @@
 
                   for(var j = 0; j < m; j++){
                       var current_data = current_array_row[j];
-                      current_table_row.append("<td>" + current_data + "</td>");
+                      current_table_row.append("<td>" + current_data.toFixed(4) + "</td>");
                   }
 
                   table.append(current_table_row);
@@ -247,8 +247,8 @@
               var firstrow = $("<tr></tr>");
               var lastrow = $("<tr></tr>");
               for (var k = 1; k <= m; k++){
-                  firstrow.append("<th>M" + k  +  "</th>");
-                  lastrow.append("<td>" + array [k - 1] + "</td>");
+                  firstrow.append("<th>M" +  k +  "</th>");
+                  lastrow.append("<td>" + array[k - 1].toFixed(4) + "</td>");
               }
               table.append(firstrow);
               table.append(lastrow);
