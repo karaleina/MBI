@@ -1,69 +1,160 @@
+h1, h2, h3, p, a, table, label {
+  font-family: "Helvetica";
+  text-decoration: none;
+}
+
+h1, h2, h3, table {
+  text-align: center;
+}
+p{
+  padding: 20px 20px;
+  margin: 20px auto;
+  text-align: justify;
+  text-indent: 2em;
+}
+
+body {
+    width: 90%;
+    margin: 0 auto;
+}
+
 #header {
   text-align: center;
   margin: auto;
-  background-color: blue;
-  width: 80%;
+  background-color: #66b3ff;
   padding: 20px;
   color: white;
+  font-weight:bold;
+  font-size: 2em;
+}
+
+.description {
+  color: grey;
+  font-size: 0.9em;
+  font-weight: normal;
+  margin: 10px auto;
+  margin-top: 2em;
+}
+
+.description:hover {
+  color: blue;
+  font-weight: bold;
+}
+
+footer {
+  text-align: center;
+  margin: auto;
+  background-color: #66b3ff;
+  padding: 20px;
+  color: white;
+  font-weight: normal;
+  font-family: "Helvetica"
+}
+
+footer li:hover {
+  color: #e8effc;
+  font-weight: bold;
 }
 
 #container {
-    width: 80%;
-    margin: auto;
-    text-align: center;
-    border: 3px solid black;
-    height: 100%;
+    display: -webkit-flex;
+    display: flex;
 }
 
 #sidebar {
-    float: left;
-    width: 50%;
+    -webkit-flex: 2;
+    flex: 2;
+    text-align: center;
 }
 
 #solid {
-    float: right;
-    width: 50%;
+    -webkit-flex: 5;
+    flex: 5;
 }
+
+#sidebar form select{
+   background: #c2d8fc;
+   border-radius: 4px;
+
+}
+
+#sidebar p{
+   text-indent: 0;
+   text-align: center;
+
+}
+
 
 .visible {
   visibility: visible;
-
-
 }
-
 .hidden {
   visibility: hidden;
-
 }
-
 ul .hidden {
   display: none;
 }
-
-
-
 table, th, td {
     border: 1px solid black;
     border-collapse: collapse;
     margin: 10px auto;
     padding: 2px;
 }
+input[type=button]{
+    background-color: #33adff;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 10px;
+    width: 120px;
+    margin: auto;
+}
+input[type=button]:hover {
+    background-color: blue;
+}
+
 
 button {
-    margin: 10px auto;
+    background-color: #33adff;
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 10px;
+    width: 120px;
+}
+
+button:hover {
+    background-color:blue;
 }
 
 img {
     display: block;
     margin: auto;
 }
-
 form {
     margin: 15px auto;
 }
-
-ul li {
-    display: inline;
+ul {
+    display: flex;
     list-style-type: none;
+    padding: 10px 10px;
+}
 
+ul > li {
+  -webkit-flex: 1;
+  flex: 1;
+}
+
+li {
+    margin: auto;
+    text-align: center;
 }

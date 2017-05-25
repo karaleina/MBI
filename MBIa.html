@@ -12,15 +12,20 @@
         <div id="wrapper">
             <div id="header">
                 <div id="logo">
-                    <h2>MBI - analiza składowych głównych (PCA) </h2>
-                </div>
+                    <h2>Analiza składowych głównych (PCA) </h2>
+            </div>
             </div>
         </div>
 
+        <h3 style="text-align:justify; text-indent:3em; font-weight:normal">Strona ta została stworzona w celach dydaktycznych, aby umożliwić prześledzenie kroków i zrozumienie działania
+           algorytmu analizy składowych głównych. Do arkusza o wybranych wymiarach n x m wprowadzamy swoje dane
+           pomiarowe - liczby. W celu zapewnienia działania algorytmu należy używać kropek, a nie przecinków dla liczb zmienno przecinkowych.
+       </h3>
+        </p>
         <div id="container">
             <div id="sidebar">
                 <div id="content_box">
-                   	<h2>Wybierz wymiar danych wejściowych</h2>
+                   	<h2>Wprowadzanie danych</h2>
                     <form>
                       <p>Liczba <i>m</i> cech</p>
                       <select id="wymiar_m">
@@ -84,7 +89,7 @@
             <div id="solid" class="border">
                 <h2>Działanie algorytmu</h2>
 
-                    <p>Algorytm PCA, czyli algorytm składowych głównych składa się z trzech kroków. W pierwszym z nich dane wejściowe są normalizowane.
+                    <p>Algorytm PCA (<i>Principal Component Analyzis</i>), czyli algorytm składowych głównych składa się z trzech kroków. W pierwszym z nich dane wejściowe są normalizowane.
                     Drugi krok polega na wyznaczeniu macierzy kowariancji między cechami.
                     W trzecim kroku poszukiwane jest takie ​ przekształcenie <i>P</i> macierzy kowariancji​, aby otrzymać​ postać diagonalną.
                     Na podstawie tego przekształcenia wyznaczane są wektory własne i wartości własne. Otrzymane wektory własne są nowymi ​ składowymi głównymi​,
@@ -98,334 +103,303 @@
 
                     <div id="steps"></div>
             </div>
+
         </div>
+        <h3 class ="description"><a target = "_blank" href="http://www.elka.pw.edu.pl/"> Projekt wykonany na potrzeby przedmiotu <i>Metody bioinformatyki</i>
+          na <i>Wydziale Elektroniki i Technik Informacyjnych Politechniki Warszawskiej.</a></i></h3>
+        <footer>
+            <h3>KONTAKT</h3>
+            <ul>
+                <li>Karolina Walędzik (karolina.waledzik@gmail.com)</li>
+                <li>Magdalena Dziarczykowska</li>
+            </ul>
+        </footer>
+    </body>
 
-        <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-        <script type="text/javascript" src="MBIjavascript.js" ></script>
-        <script src="pca-with-dependencies.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="MBIjavascript.js" ></script>
+    <script src="pca-with-dependencies.js"></script>
 
-        <script>
+    <script>
 
-        var covarianceMatrix = null;
+      var covarianceMatrix = null;
 
-        $(document).ready(function(){
+      $(document).ready(function(){
 
-            var covarianceMatrix = null;
+          var covarianceMatrix = null;
 
-            function getM(){
-                var wymiar_m = $("#wymiar_m").val();
-                return wymiar_m;
-            }
-            function getN(){
-                var wymiar_n = $("#wymiar_n").val();
-                return wymiar_n;
-            }
-
-            function countMeans(array, m, n){
-
-                var srednie_atrybutow = [];
-                for (var i = 0; i< m; i++){
-                    // po rzędach
-                    var suma_cechy = 0;
-                    for (var j = 0; j< n; j++) {
-                        suma_cechy += parseFloat(array[j][i]);
-                    }
-                    srednie_atrybutow[i] = suma_cechy/n;
-                }
-                return srednie_atrybutow;
-            }
-
-            function countStd(array, srednie_atrybutow, m, n ){
-                  //TODO porawic bo cos nie dziala
-                  var odchylenie_cechy = [];
-                  //idziemy po cechach
-                  for(var i = 0; i < m; i++){
-                      var suma_kwadratow = 0;
-                      //idziemy po rzędach
-                      for (var j = 0; j< n; j++) {
-                          var currentValue = parseFloat(array[j][i]);
-                          suma_kwadratow += (currentValue - srednie_atrybutow[i])*(currentValue - srednie_atrybutow[i]);
-                      }
-                      odchylenie_cechy[i] = Math.sqrt(suma_kwadratow / n);
-                  }
-                  return odchylenie_cechy;
-            }
-
-            function translateDataIntoMatrix(m, n) {
-
-                var nieznormalizowane_dane = new Matrix(parseFloat(n),  parseFloat(m));
-                var dataMatrix = [];
-                var currentValue = 0;
-                var currentRow = 0;
-                var dataCurrentRow = [];
-
-                for( var i = 1; i <= n; i++){
-                    dataCurrentRow=[];
-                    currentRow = $('#input_data_table').find(".N" + i);
-                    for (var j = 1; j<= m; j++){
-                        currentValue = currentRow.find(".M" + j).text();
-                        dataCurrentRow.push(currentValue);
-
-                    }
-                    dataMatrix.push("[" + dataCurrentRow + "]");
-                    nieznormalizowane_dane[i - 1] = dataCurrentRow;
-                }
-                return nieznormalizowane_dane;
-            }
-
-            function normalization(srednie_atrybutow, odchylenie_atrybutow, nieznormalizowane_dane){
-                var m = getM();
-                var n = getN();
-
-                var nieznormalizowane_dane = translateDataIntoMatrix(m, n);
-                var nieznormalizowane_2d_array = nieznormalizowane_dane.to2DArray();
-
-                for(var i = 1 ; i <= m; i++) {
-                    var column_vector = nieznormalizowane_dane.getColumnVector(i-1);
-                    column_vector = column_vector.map( function(value) {
-                        return (value - srednie_atrybutow[i-1])/odchylenie_atrybutow[i-1];
-                    } );
-                    nieznormalizowane_dane.setColumn(i-1, column_vector);
-                }
-
-                var znormalizowane_dane = nieznormalizowane_dane;
-                return znormalizowane_dane;
-
-            }
-
-          function convertMatrixIntoHtmlTable(matrix_2d_array, m,  n){
-                //var matrix_2d_array = matrix.to2DArray();
-
-                var table = $("<table class=results></table>");
-
-                var firstrow = $("<tr><th></th></tr>");
-                for (var k = 1; k <= m; k++){
-
-                    firstrow.append("<th>M" + k  +  "</th>");
-                }
-
-                table.append(firstrow);
-
-                for(var i = 0; i < n; i++ ){
-                    var current_array_row = matrix_2d_array[i];
-                    var current_table_row = $("<tr><th>N" + parseInt(i+1) + "</th></tr>");
-
-                    for(var j = 0; j < m; j++){
-                        var current_data = current_array_row[j];
-                        current_table_row.append("<td>" + current_data + "</td>");
-                    }
-
-                    table.append(current_table_row);
-                    //table.append("<tr>" + current_table_row + "</tr>");
-                }
-
-                //table = $("<table>" + table + "</table>");
-                return table;
-
+          function getM(){
+              var wymiar_m = $("#wymiar_m").val();
+              return wymiar_m;
+          }
+          function getN(){
+              var wymiar_n = $("#wymiar_n").val();
+              return wymiar_n;
           }
 
-          function convertArrayIntoTable(array, m){
+          function countMeans(array, m, n){
 
-                var table = $("<table class=results></table>");
-
-                var firstrow = $("<tr></tr>");
-                var lastrow = $("<tr></tr>");
-                for (var k = 1; k <= m; k++){
-                    firstrow.append("<th>M" + k  +  "</th>");
-                    lastrow.append("<td>" + array [k - 1] + "</td>");
-                }
-                table.append(firstrow);
-                table.append(lastrow);
-
-                return table;
-
-          }
-
-          function countCovarianceMatrix(matrix, m){
-              var m = parseInt(m);
-              var covarianceMatrix = new Matrix(m, m);
-              for (var i=0; i<m; i++){
-                  var motherVector = matrix.getColumnVector(i);
-
-                  for (var j=0; j<m; j++){
-                      var cov = 0;
-                      var currentVector = matrix.getColumnVector(j);
-                      for (var k=0; k< currentVector.length ; k++ ){
-                          cov += currentVector[k]*motherVector[k];
-                      }
-                      covarianceMatrix[i][j] = cov;
-                      console.log(covarianceMatrix[i][j]);
+              var srednie_atrybutow = [];
+              for (var i = 0; i< m; i++){
+                  // po rzędach
+                  var suma_cechy = 0;
+                  for (var j = 0; j< n; j++) {
+                      suma_cechy += parseFloat(array[j][i]);
                   }
+                  srednie_atrybutow[i] = suma_cechy/n;
               }
-              return covarianceMatrix;
+              return srednie_atrybutow;
           }
 
+          function countStd(array, srednie_atrybutow, m, n ){
+                //TODO porawic bo cos nie dziala
+                var odchylenie_cechy = [];
+                //idziemy po cechach
+                for(var i = 0; i < m; i++){
+                    var suma_kwadratow = 0;
+                    //idziemy po rzędach
+                    for (var j = 0; j< n; j++) {
+                        var currentValue = parseFloat(array[j][i]);
+                        suma_kwadratow += (currentValue - srednie_atrybutow[i])*(currentValue - srednie_atrybutow[i]);
+                    }
+                    odchylenie_cechy[i] = Math.sqrt(suma_kwadratow / n);
+                }
+                return odchylenie_cechy;
+          }
 
-            $("#getData").on("click", function(){
+          function translateDataIntoMatrix(m, n) {
 
-                $(".first_step").addClass("hidden");
-                $(".first_step").removeClass("visible");
+              var nieznormalizowane_dane = new Matrix(parseFloat(n),  parseFloat(m));
+              var dataMatrix = [];
+              var currentValue = 0;
+              var currentRow = 0;
+              var dataCurrentRow = [];
 
+              for( var i = 1; i <= n; i++){
+                  dataCurrentRow=[];
+                  currentRow = $('#input_data_table').find(".N" + i);
+                  for (var j = 1; j<= m; j++){
+                      currentValue = currentRow.find(".M" + j).text();
+                      dataCurrentRow.push(currentValue);
 
-                $(".third_step").addClass("hidden");
-                $(".third_step").removeClass("visible");
+                  }
+                  dataMatrix.push("[" + dataCurrentRow + "]");
+                  nieznormalizowane_dane[i - 1] = dataCurrentRow;
+              }
+              return nieznormalizowane_dane;
+          }
 
-
-                $(".second_step").addClass("visible");
-                $(".second_step").removeClass("hidden");
-                $(".second_step").text("DALEJ");
-
-
-
-                var m = getM();
-                var n = getN();
-
-                var nieznormalizowane_dane = translateDataIntoMatrix(m, n);
-                var nieznormalizowane_2d_array = nieznormalizowane_dane.to2DArray();
-
-                var srednie_atrybutow = countMeans(nieznormalizowane_2d_array, m, n);
-                console.log(srednie_atrybutow);
-
-                var odchylenie_atrybutow = countStd(nieznormalizowane_2d_array, srednie_atrybutow, m, n );
-                console.log(odchylenie_atrybutow);
-
-                var znormalizowane_dane = normalization(srednie_atrybutow, odchylenie_atrybutow, nieznormalizowane_dane);
-
-                //czyść
-                $("#steps").empty();
-
-
-
-                $("#steps").append("<h2>Krok 1:</h2>");
-
-                //średnia
-                $("#steps").append("<h3>Średnia z cech:</h3>");
-                var srednia_cech_table = convertArrayIntoTable(srednie_atrybutow, m);
-                $("#steps").append(srednia_cech_table);
-
-                //odchylenie
-                $("#steps").append("<h3>Odchylenie z cech:</h3>");
-                var odchylenie_cech_table = convertArrayIntoTable(odchylenie_atrybutow, m);
-                $("#steps").append(odchylenie_cech_table);
-
-                $("#steps").append("<h3>Wzór, pod który podstawiamy:</h3>")
-                $("#steps").append("<img src=krok1.jpg></img>");
-
-                //macierz znormalizowana`
-                $("#steps").append("<h3>Otrzymana znormalizowana macierz danych:</h3>");
-                var table = convertMatrixIntoHtmlTable(znormalizowane_dane.to2DArray(), m, n);
-                $("#steps").append(table);
-
-                covarianceMatrix = countCovarianceMatrix(znormalizowane_dane, m);
-
-
-
-          });
-
-          $(".first_step").on("click", function() {
-              $("#getData").trigger("click");
-
-          });
-
-          $(".second_step").on("click", function(){
-
-              $("#steps").empty();
-              $(".first_step").addClass("visible");
-              $(".first_step").removeClass("hidden");
-              $(".first_step").text("WSTECZ");
-
-
-
-              $(".third_step").addClass("visible");
-              $(".third_step").removeClass("hidden");
-              $(".third_step").text("DALEJ");
-
-
-              $(".second_step").addClass("hidden");
-              $(".second_step").removeClass("visible");
-
-
+          function normalization(srednie_atrybutow, odchylenie_atrybutow, nieznormalizowane_dane){
               var m = getM();
-              var covariance_table = convertMatrixIntoHtmlTable(covarianceMatrix.to2DArray(), m, m);
+              var n = getN();
 
-              $("#steps").append("<h2>Krok 2:</h2>")
-                          .append("<h3>Wzór, z którego zostanie wyznaczona macierz kowariancji:</h3>")
-                          .append("<img src=krok2.jpg></img>")
-                          .append("<h3>Obliczona macierz kowariancji między cechami:</h3>")
-                          .append(covariance_table);
-          });
+              var nieznormalizowane_dane = translateDataIntoMatrix(m, n);
+              var nieznormalizowane_2d_array = nieznormalizowane_dane.to2DArray();
 
-          $(".third_step").on("click", function(){
+              for(var i = 1 ; i <= m; i++) {
+                  var column_vector = nieznormalizowane_dane.getColumnVector(i-1);
+                  column_vector = column_vector.map( function(value) {
+                      return (value - srednie_atrybutow[i-1])/odchylenie_atrybutow[i-1];
+                  } );
+                  nieznormalizowane_dane.setColumn(i-1, column_vector);
+              }
 
-              var m = getM();
-              $("#steps").empty();
+              var znormalizowane_dane = nieznormalizowane_dane;
+              return znormalizowane_dane;
+
+          }
+
+        function convertMatrixIntoHtmlTable(matrix_2d_array, m,  n){
+              //var matrix_2d_array = matrix.to2DArray();
+
+              var table = $("<table class=results></table>");
+
+              var firstrow = $("<tr><th></th></tr>");
+              for (var k = 1; k <= m; k++){
+
+                  firstrow.append("<th>M" + k  +  "</th>");
+              }
+
+              table.append(firstrow);
+
+              for(var i = 0; i < n; i++ ){
+                  var current_array_row = matrix_2d_array[i];
+                  var current_table_row = $("<tr><th>N" + parseInt(i+1) + "</th></tr>");
+
+                  for(var j = 0; j < m; j++){
+                      var current_data = current_array_row[j];
+                      current_table_row.append("<td>" + current_data + "</td>");
+                  }
+
+                  table.append(current_table_row);
+                  //table.append("<tr>" + current_table_row + "</tr>");
+              }
+
+              //table = $("<table>" + table + "</table>");
+              return table;
+
+        }
+
+        function convertArrayIntoTable(array, m){
+
+              var table = $("<table class=results></table>");
+
+              var firstrow = $("<tr></tr>");
+              var lastrow = $("<tr></tr>");
+              for (var k = 1; k <= m; k++){
+                  firstrow.append("<th>M" + k  +  "</th>");
+                  lastrow.append("<td>" + array [k - 1] + "</td>");
+              }
+              table.append(firstrow);
+              table.append(lastrow);
+
+              return table;
+
+        }
+
+        function countCovarianceMatrix(matrix, m){
+            var m = parseInt(m);
+            var covarianceMatrix = new Matrix(m, m);
+            for (var i=0; i<m; i++){
+                var motherVector = matrix.getColumnVector(i);
+
+                for (var j=0; j<m; j++){
+                    var cov = 0;
+                    var currentVector = matrix.getColumnVector(j);
+                    for (var k=0; k< currentVector.length ; k++ ){
+                        cov += currentVector[k]*motherVector[k];
+                    }
+                    covarianceMatrix[i][j] = cov;
+                    console.log(covarianceMatrix[i][j]);
+                }
+            }
+            return covarianceMatrix;
+        }
+
+
+          $("#getData").on("click", function(){
+
               $(".first_step").addClass("hidden");
               $(".first_step").removeClass("visible");
+
 
               $(".third_step").addClass("hidden");
               $(".third_step").removeClass("visible");
 
+
               $(".second_step").addClass("visible");
               $(".second_step").removeClass("hidden");
-              $(".second_step").text("WSTECZ");
+              $(".second_step").text("DALEJ");
 
+
+
+              var m = getM();
+              var n = getN();
+
+              var nieznormalizowane_dane = translateDataIntoMatrix(m, n);
+              var nieznormalizowane_2d_array = nieznormalizowane_dane.to2DArray();
+
+              var srednie_atrybutow = countMeans(nieznormalizowane_2d_array, m, n);
+              console.log(srednie_atrybutow);
+
+              var odchylenie_atrybutow = countStd(nieznormalizowane_2d_array, srednie_atrybutow, m, n );
+              console.log(odchylenie_atrybutow);
+
+              var znormalizowane_dane = normalization(srednie_atrybutow, odchylenie_atrybutow, nieznormalizowane_dane);
+
+              //czyść
               $("#steps").empty();
-              $("#steps").append("<h2>Krok 3:</h2>");
-
-              var pca = new PCA(covarianceMatrix, {isCovarianceMatrix:'true', scale:'false', center:'false' });
-              var lambdas = pca.getEigenvalues();
-              var diagonalMartix = Matrix.diag(lambdas);
-              $("#steps").append("<h3>Postać diagonalna macierzy kowariancji:</h3>")
-                          .append(convertMatrixIntoHtmlTable(diagonalMartix.to2DArray(), m, m ));
-              $("#steps").append("<h3>Wzór, który wiąże obie macierze kowariancji za pomocą przekształcenia <i>P</i> </h3>")
-                          .append("<img src=krok3.jpg></img>");
-              var eigenVectorsMatrix = pca.getEigenvectors();
-              $("#steps").append("<h3>Wektory własne - macierz przekształcenia <i>P</i> </h3>")
-                          .append(convertMatrixIntoHtmlTable(eigenVectorsMatrix.to2DArray(), m, m ));
-
-
-          });
 
 
 
+              $("#steps").append("<h2>Krok 1:</h2>");
+
+              //średnia
+              $("#steps").append("<h3>Średnia z cech:</h3>");
+              var srednia_cech_table = convertArrayIntoTable(srednie_atrybutow, m);
+              $("#steps").append(srednia_cech_table);
+
+              //odchylenie
+              $("#steps").append("<h3>Odchylenie z cech:</h3>");
+              var odchylenie_cech_table = convertArrayIntoTable(odchylenie_atrybutow, m);
+              $("#steps").append(odchylenie_cech_table);
+
+              $("#steps").append("<h3>Wzór, pod który podstawiamy:</h3>")
+              $("#steps").append("<img src=krok1.jpg></img>");
+
+              //macierz znormalizowana`
+              $("#steps").append("<h3>Otrzymana znormalizowana macierz danych:</h3>");
+              var table = convertMatrixIntoHtmlTable(znormalizowane_dane.to2DArray(), m, n);
+              $("#steps").append(table);
+
+              covarianceMatrix = countCovarianceMatrix(znormalizowane_dane, m);
 
 
 
-            /*
-            const dataset = mldatasetiris.getNumbers();
-
-            // dataset is a two-dimensional array where rows represent the samples and columns the features
-            const pca = new PCA(dataset);
-            console.log(pca.getExplainedVariance());
-
-                  const newPoints = [[4.9, 3.2, 1.2, 0.4], [5.4, 3.3, 1.4, 0.9]];
-            console.log(pca.predict(newPoints)); // project new points into the PCA space
-
-            // Operacje na macierzach
-                  var m1 = Matrix.ones(5, 5);
-                  var m2 = Matrix.ones(5, 5);
-
-            var multiplied = m1.mmul(m2);
-                  var determinant = multiplied.det();
-
-                  console.log(multiplied);
-                  console.log(determinant);
-
-            // Możesz odwoływać się też do ml-stat
-            console.log(mlstat.array.sum([1, 2, 3]));
-
-            // I do ml-array-utils
-            console.log(mlarrayutils.applyDotProduct([1, 2, 3], [1, 2, 3]));
-
-            var kosmos = 132;
-            var blabla = new Matrix (([[2,3],[3,4]]), 2);
-            console.log("Czy to macierz?: " + Matrix.isMatrix(blabla) );
-            console.log("Czy to macierz?: " + Matrix.isMatrix(kosmos) );
-            //var blabla_array = Matrix.to2DArray(blabla);
-
-            //console.log(blabla_array[0].length);*/
         });
 
-      	</script>
-    </body>
+        $(".first_step").on("click", function() {
+            $("#getData").trigger("click");
+
+        });
+
+        $(".second_step").on("click", function(){
+
+            $("#steps").empty();
+            $(".first_step").addClass("visible");
+            $(".first_step").removeClass("hidden");
+            $(".first_step").text("WSTECZ");
+
+
+
+            $(".third_step").addClass("visible");
+            $(".third_step").removeClass("hidden");
+            $(".third_step").text("DALEJ");
+
+
+            $(".second_step").addClass("hidden");
+            $(".second_step").removeClass("visible");
+
+
+            var m = getM();
+            var covariance_table = convertMatrixIntoHtmlTable(covarianceMatrix.to2DArray(), m, m);
+
+            $("#steps").append("<h2>Krok 2:</h2>")
+                        .append("<h3>Wzór, z którego zostanie wyznaczona macierz kowariancji:</h3>")
+                        .append("<img src=krok2.jpg></img>")
+                        .append("<h3>Obliczona macierz kowariancji między cechami:</h3>")
+                        .append(covariance_table);
+        });
+
+        $(".third_step").on("click", function(){
+
+            var m = getM();
+            $("#steps").empty();
+            $(".first_step").addClass("hidden");
+            $(".first_step").removeClass("visible");
+
+            $(".third_step").addClass("hidden");
+            $(".third_step").removeClass("visible");
+
+            $(".second_step").addClass("visible");
+            $(".second_step").removeClass("hidden");
+            $(".second_step").text("WSTECZ");
+
+            $("#steps").empty();
+            $("#steps").append("<h2>Krok 3:</h2>");
+
+            var pca = new PCA(covarianceMatrix, {isCovarianceMatrix:'true', scale:'false', center:'false' });
+            var lambdas = pca.getEigenvalues();
+            var diagonalMartix = Matrix.diag(lambdas);
+            $("#steps").append("<h3>Postać diagonalna macierzy kowariancji:</h3>")
+                        .append(convertMatrixIntoHtmlTable(diagonalMartix.to2DArray(), m, m ));
+            $("#steps").append("<h3>Wzór, który wiąże diagonalną macierz kowariancji za pomocą przekształcenia <i>P</i> z macierzą znormalizowanych danych <i>Z</i></h3>")
+                        .append("<img src=krok3.jpg></img>");
+            var eigenVectorsMatrix = pca.getEigenvectors();
+            $("#steps").append("<h3>Wektory własne - macierz przekształcenia <i>P</i> </h3>")
+                        .append(convertMatrixIntoHtmlTable(eigenVectorsMatrix.to2DArray(), m, m ));
+        });
+    });
+
+    </script>
 </html>
