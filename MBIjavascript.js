@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
   var covarianceMatrix = null;
+  var nieznormalizowane_dane = null;
 
   console.log("document ready!");
 
@@ -86,14 +87,16 @@ $(document).ready(function(){
 
   }
 
-  function convertMatrixIntoHtmlTable(matrix_2d_array, m,  n){
-    //var matrix_2d_array = matrix.to2DArray();
+  function convertMatrixIntoHtmlTable(matrix){
+    var m = matrix.columns;
+    var n = matrix.rows;
+
+    var matrix_2d_array = matrix.to2DArray();
 
     var table = $("<table class=results></table>");
 
     var firstrow = $("<tr><th></th></tr>");
     for (var k = 1; k <= m; k++){
-
       firstrow.append("<th>M" + k  +  "</th>");
     }
 
@@ -222,7 +225,7 @@ $(document).ready(function(){
     var m = getM();
     var n = getN();
 
-    var nieznormalizowane_dane = translateDataIntoMatrix(m, n);
+    nieznormalizowane_dane = translateDataIntoMatrix(m, n);
     var nieznormalizowane_2d_array = nieznormalizowane_dane.to2DArray();
 
     var srednie_atrybutow = countMeans(nieznormalizowane_2d_array, m, n);
@@ -252,7 +255,7 @@ $(document).ready(function(){
 
     //macierz znormalizowana`
     $("#steps").append("<h3>Otrzymana znormalizowana macierz danych:</h3>");
-    var table = convertMatrixIntoHtmlTable(znormalizowane_dane.to2DArray(), m, n);
+    var table = convertMatrixIntoHtmlTable(znormalizowane_dane);
     $("#steps").append(table);
 
     covarianceMatrix = countCovarianceMatrix(znormalizowane_dane, m);
@@ -281,7 +284,7 @@ $(document).ready(function(){
     $("fourth_step").removeClass("visible");
 
     var m = getM();
-    var covariance_table = convertMatrixIntoHtmlTable(covarianceMatrix.to2DArray(), m, m);
+    var covariance_table = convertMatrixIntoHtmlTable(covarianceMatrix);
 
     $("#steps").append("<h2>Krok 2:</h2>")
     .append("<h3>Wzór, z którego zostanie wyznaczona macierz kowariancji:</h3>")
@@ -315,12 +318,12 @@ $(document).ready(function(){
     var lambdas = pca.getEigenvalues();
     var diagonalMartix = Matrix.diag(lambdas);
     $("#steps").append("<h3>Postać diagonalna macierzy kowariancji:</h3>")
-    .append(convertMatrixIntoHtmlTable(diagonalMartix.to2DArray(), m, m ));
+    .append(convertMatrixIntoHtmlTable(diagonalMartix));
     $("#steps").append("<h3>Wzór, który wiąże diagonalną macierz kowariancji za pomocą przekształcenia <i>P</i> z macierzą znormalizowanych danych <i>Z</i></h3>")
     .append("<img src=krok3.jpg></img>");
     var eigenVectorsMatrix = pca.getEigenvectors();
     $("#steps").append("<h3>Wektory własne - macierz przekształcenia <i>P</i> </h3>")
-    .append(convertMatrixIntoHtmlTable(eigenVectorsMatrix.to2DArray(), m, m ));
+    .append(convertMatrixIntoHtmlTable(eigenVectorsMatrix));
   });
 
   $(".fourth_step").on("click", function(){
@@ -342,6 +345,8 @@ $(document).ready(function(){
 
     var pca = new PCA(covarianceMatrix, {isCovarianceMatrix:'true', scale:'false', center:'false' });
     var eigenVectorsMatrix = pca.getEigenvectors();
+    console.log("eigenVectorsMatrix", eigenVectorsMatrix);
+
     var lambdas = pca.getEigenvalues();
     var diagonalMartix_lambdas = Matrix.diag(lambdas);
 
@@ -356,28 +361,48 @@ $(document).ready(function(){
       }
     }
 
-    //Kaiser Guttman - nowy  układ współrzędnych
-    var m_kaiser = parseInt(lambdas_kaiser_guttman.length);
-    var n_kaiser = parseInt(getN());
-    var matrix_kaiser_vectors = new Matrix(n_kaiser, m_kaiser);
+    //prediction
+    var predicted_dataset = pca.predict(nieznormalizowane_dane);
+
+    var predicted_dataset_kaiser = new Matrix(
+      nieznormalizowane_dane.rows,
+      lambdas_kaiser_guttman.length
+    );
+    var matrix_kaiser_vectors = new Matrix(
+      eigenVectorsMatrix.rows,
+      lambdas_kaiser_guttman.length
+    );
+
+    var k = 0;
 
     for (i = 0; i < lambdas.length; i++) {
       //spełniające warunek wartości własne
       if (lambdas[i]>=1){
-        matrix_kaiser_vectors.addColumn(i, eigenVectorsMatrix.getColumn(i));
+        matrix_kaiser_vectors.setColumn(k, eigenVectorsMatrix.getColumn(i));
+        predicted_dataset_kaiser.setColumn(k, predicted_dataset.getColumn(i));
+        k++;
       }
     }
 
+    //LOGi
+    console.log(predicted_dataset);
+    console.log(predicted_dataset_kaiser);
+
     //Printuj do htmla
-    $("#steps").append("<h3>Kryterium <i>Kaisera-Guttmana</i></h3>")
+    $("#steps").append("<h3>Kryterium <i>Kaisera-Guttmana</i></h3>");
     $("#steps").append("<p>Do wyboru nowego układu współrzędnych w algorytmie PCA " +
                         "stosuje się często kryterium Kaisera-Guttmana, ​które mówi, iż należy zachować składowe, " +
                         "dla których wartości własne są większe od 1 (czyli wkład składowej większy, niż wkład pojedynczej zmiennej.)</p>")
               .append("<p> Z tego warunku wynika, że wartości własne, które spełniają warunek: </p>");
+
     $("#steps").append(convertArrayIntoTable(lambdas_kaiser_guttman, lambdas_kaiser_guttman.length))
               .append("<p> A zatem nowe wymiary to:</p>")
-              .append(convertMatrixIntoHtmlTable(matrix_kaiser_vectors, lambdas_kaiser_guttman.length, getN()));
+              .append(convertMatrixIntoHtmlTable(matrix_kaiser_vectors));
 
+    $("#steps").append("<h3>WYNIK: Przetransformowane w nowe wymiary dane wejściowe: </h3>");
+    $("#steps").append(convertMatrixIntoHtmlTable(predicted_dataset));
 
+    $("#steps").append("<h3>WYNIK: Przetransformowane w nowe wymiary dane wejściowe poddane Krytertium <i>Kaisera-Guttmana</i>: </h3>");
+    $("#steps").append(convertMatrixIntoHtmlTable(predicted_dataset_kaiser));
   });
 });
