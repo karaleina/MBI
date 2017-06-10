@@ -25,12 +25,16 @@ form select {
 #header {
   text-align: center;
   margin: auto;
-  background-color: #66b3ff;
   padding: 20px;
   color: white;
   font-weight:bold;
   font-size: 2em;
   border-radius: 8px;
+  background-color: #66b3ff;
+  background: -webkit-radial-gradient(circle, #93b5ed 40%, #66b3ff 60%); /* Safari 5.1-6.0 */
+  background: -o-radial-gradient(circle, #93b5ed 40%, #66b3ff 60%); /* For Opera 11.6-12.0 */
+  background: -moz-radial-gradient(circle, #93b5ed 40%, #66b3ff 60%); /* For Firefox 3.6-15 */
+  background: radial-gradient(circle, #93b5ed 40%, #66b3ff 60%); /* Standard syntax */
 }
 
 .description {
@@ -41,25 +45,32 @@ form select {
   margin-top: 2em;
 }
 
-.description:hover {
-  color: blue;
-  font-weight: bold;
-}
 
 footer {
   text-align: center;
   margin: auto;
-  background-color: #66b3ff;
   padding: 20px;
   color: white;
   font-weight: normal;
   font-family: "Helvetica";
   border-radius: 8px;
+  background-color: #66b3ff;
+  background: -webkit-radial-gradient(circle, #93b5ed 40%, #66b3ff 60%); /* Safari 5.1-6.0 */
+  background: -o-radial-gradient(circle, #93b5ed 40%, #66b3ff 60%); /* For Opera 11.6-12.0 */
+  background: -moz-radial-gradient(circle, #93b5ed 40%, #66b3ff 60%); /* For Firefox 3.6-15 */
+  background: radial-gradient(circle, #93b5ed 40%, #66b3ff 60%); /* Standard syntax */
+}
+
+footer li {
+  padding: 30px 10px;
+  border-radius: 70px;
 }
 
 footer li:hover {
-  color: #e8effc;
   font-weight: bold;
+  color:  blue;
+  transition: 0.5s;
+
 }
 
 #container {
@@ -122,6 +133,7 @@ input[type=button]{
 }
 input[type=button]:hover {
     background-color: blue;
+    transition: 0.5s;
 }
 
 
@@ -141,6 +153,7 @@ button {
 
 button:hover {
     background-color:blue;
+    transition: 0.5s;
 }
 
 img {
